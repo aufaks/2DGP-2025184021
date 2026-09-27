@@ -4,6 +4,7 @@ from pico2d import *
 open_canvas(800, 600)
 
 character = load_image('character.png')
+grass = load_image('grass.png')
 
 def draw_character(x,y):
     clear_canvas()
