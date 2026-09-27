@@ -11,7 +11,9 @@ def draw_character(x,y):
     update_canvas()
 
 def move_circle():
-    print('circle')
+    theta = math.radians(360)
+    x = 400 + 200 * math.cos(theta)
+    y = 300 + 200 * math.sin(theta)
     pass
 
 def move_rectangle():
