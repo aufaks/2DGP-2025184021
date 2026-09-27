@@ -20,8 +20,23 @@ def move_circle():
         draw_character(x,y)
     pass
 
+def move_top():
+    pass
+
+def move_right():
+    pass
+
+def move_bottom():
+    pass
+
+def move_left():
+    pass
+
 def move_rectangle():
-    print('rectangle')
+    move_top()
+    move_right()
+    move_bottom()
+    move_left()
     pass
 
 def move_triangle():
