@@ -18,54 +18,45 @@ def move_circle():
         y = 300 + 200 * math.sin(theta)
 
         draw_character(x,y)
-    pass
 
 def move_top():
     for y in range(100, 501, 5):
         draw_character(700, y)
-    pass
 
 def move_left():
     for x in range(700, 99, -5):
             draw_character(x, 500)
-    pass
 
 def move_bottom():
     for y in range(500, 99, -5):
             draw_character(100, y)
-    pass
 
 def move_right():
     for x in range(100, 701, 5):
                 draw_character(x, 100)
-    pass
 
 def move_rectangle():
     move_top()
     move_left()
     move_bottom()
     move_right()
-    pass
 
 def move_lefttop():
     y = 100
     for x in range(700, 399, -3):
          y += 4
          draw_character(x,y)
-    pass
 
 def move_leftbottom():
     y = 500
     for x in range(400, 99, -3):
              y -= 4
              draw_character(x,y)
-    pass
 
 def move_triangle():
     move_lefttop()
     move_leftbottom()
     move_right()
-    pass
 
 while True:
     move_circle()
