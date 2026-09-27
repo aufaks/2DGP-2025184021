@@ -8,6 +8,7 @@ grass = load_image('grass.png')
 
 def draw_character(x,y):
     clear_canvas()
+    grass.draw(400,30)
     character.draw(x,y)
     update_canvas()
     delay(0.01)
