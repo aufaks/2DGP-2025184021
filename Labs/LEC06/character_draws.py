@@ -48,7 +48,6 @@ def move_rectangle():
     pass
 
 def move_lefttop():
-    x = 700
     y = 100
     for x in range(700, 399, -3):
          y += 4
@@ -56,7 +55,6 @@ def move_lefttop():
     pass
 
 def move_leftbottom():
-    x = 400
     y = 500
     for x in range(400, 99, -3):
              y -= 4
