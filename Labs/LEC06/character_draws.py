@@ -47,8 +47,16 @@ def move_rectangle():
     move_right()
     pass
 
+def move_lefttop():
+     pass
+
+def move_leftbottom():
+     pass
+
 def move_triangle():
-    print('triangle')
+    move_lefttop()
+    move_leftbottom()
+    move_right()
     pass
 
 while True:
