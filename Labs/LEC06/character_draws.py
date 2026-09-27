@@ -48,7 +48,9 @@ def move_rectangle():
     pass
 
 def move_lefttop():
-     pass
+    x = 700
+    y = 100
+    pass
 
 def move_leftbottom():
      pass
