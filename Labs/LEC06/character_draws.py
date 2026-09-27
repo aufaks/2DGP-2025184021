@@ -9,6 +9,7 @@ def draw_character(x,y):
     clear_canvas()
     character.draw(x,y)
     update_canvas()
+    delay(0.01)
 
 def move_circle():
     for degree in range(360):
