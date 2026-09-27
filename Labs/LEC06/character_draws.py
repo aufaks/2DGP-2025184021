@@ -58,6 +58,9 @@ def move_lefttop():
 def move_leftbottom():
     x = 400
     y = 500
+    for x in range(400, 99, -3):
+             y -= 4
+             draw_character(x,y)
     pass
 
 def move_triangle():
