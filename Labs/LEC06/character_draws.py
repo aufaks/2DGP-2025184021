@@ -51,6 +51,7 @@ def move_lefttop():
     x = 700
     y = 100
     for x in range(700, 399, -5):
+         y += 5
          draw_character(x,y)
     pass
 
