@@ -25,20 +25,20 @@ def move_top():
         draw_character(700, y)
     pass
 
-def move_right():
+def move_left():
     pass
 
 def move_bottom():
     pass
 
-def move_left():
+def move_right():
     pass
 
 def move_rectangle():
     move_top()
-    move_right()
-    move_bottom()
     move_left()
+    move_bottom()
+    move_right()
     pass
 
 def move_triangle():
