@@ -53,7 +53,9 @@ def move_lefttop():
     pass
 
 def move_leftbottom():
-     pass
+    x = 400
+    y = 500
+    pass
 
 def move_triangle():
     move_lefttop()
