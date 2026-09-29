@@ -27,15 +27,15 @@ def move_top():
 
 def move_left():
     for x in range(700, 99, -5):
-            draw_character(x, 500)
+        draw_character(x, 500)
 
 def move_bottom():
     for y in range(500, 99, -5):
-            draw_character(100, y)
+        draw_character(100, y)
 
 def move_right():
     for x in range(100, 701, 5):
-                draw_character(x, 100)
+        draw_character(x, 100)
 
 def move_rectangle():
     move_top()
@@ -46,14 +46,14 @@ def move_rectangle():
 def move_lefttop():
     y = 100
     for x in range(700, 399, -3):
-         y += 4
-         draw_character(x,y)
+        y += 4
+        draw_character(x,y)
 
 def move_leftbottom():
     y = 500
     for x in range(400, 99, -3):
-             y -= 4
-             draw_character(x,y)
+        y -= 4
+        draw_character(x,y)
 
 def move_triangle():
     move_lefttop()
