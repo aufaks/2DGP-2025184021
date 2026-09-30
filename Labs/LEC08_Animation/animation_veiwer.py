@@ -6,6 +6,7 @@ CANVAS_HEIGHT = 720
 SHEET_HEIGHT = 1024
 FRAME_DELAY = 0.08
 DISPLAY_HEIGHT = 520
+REPEAT_COUNT = 5
 
 
 class Frame(NamedTuple):
@@ -127,10 +128,14 @@ sprite_sheet = load_image('animation_sprite_sheet.png')
 # The first frame is a measured (x, top, width, height) rectangle.
 animation_index = 0
 frame_index = 0
+completed_plays = 0
 
 while True:
 	animation_frames = ANIMATIONS[animation_index]
 	frame = animation_frames[frame_index]
 	draw_frame(frame, animation_frames)
 	delay(FRAME_DELAY)
-	frame_index = (frame_index + 1) % len(animation_frames)
+	frame_index += 1
+	if frame_index == len(animation_frames):
+		frame_index = 0
+		completed_plays += 1
