@@ -125,8 +125,11 @@ open_canvas(CANVAS_WIDTH, CANVAS_HEIGHT)
 sprite_sheet = load_image('animation_sprite_sheet.png')
 
 # The first frame is a measured (x, top, width, height) rectangle.
-frame = RUN_FRAMES[0]
+animation_index = 0
+frame_index = 0
 
 while True:
-	draw_frame(frame, RUN_FRAMES)
+	animation_frames = ANIMATIONS[animation_index]
+	frame = animation_frames[frame_index]
+	draw_frame(frame, animation_frames)
 	delay(FRAME_DELAY)
