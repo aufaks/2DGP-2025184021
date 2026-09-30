@@ -63,6 +63,15 @@ FOURTH_FRAMES = (
 	Frame(915, 618, 74, 69),
 )
 
+FIFTH_FRAMES = (
+	Frame(87, 777, 57, 70),
+	Frame(255, 758, 69, 89),
+	Frame(433, 727, 62, 105),
+	Frame(588, 715, 63, 93),
+	Frame(749, 750, 61, 83),
+	Frame(903, 775, 60, 72),
+)
+
 
 open_canvas(CANVAS_WIDTH, CANVAS_HEIGHT)
 sprite_sheet = load_image('animation_sprite_sheet.png')
