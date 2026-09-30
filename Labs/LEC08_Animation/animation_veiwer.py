@@ -7,6 +7,7 @@ SHEET_HEIGHT = 1024
 FRAME_DELAY = 0.08
 DISPLAY_HEIGHT = 520
 REPEAT_COUNT = 5
+PAUSE_SECONDS = 1.0
 
 
 class Frame(NamedTuple):
@@ -140,4 +141,5 @@ while True:
 		frame_index = 0
 		completed_plays += 1
 		if completed_plays == REPEAT_COUNT:
+			delay(PAUSE_SECONDS)
 			completed_plays = 0
