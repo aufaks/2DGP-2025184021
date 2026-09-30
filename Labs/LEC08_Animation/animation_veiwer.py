@@ -139,3 +139,5 @@ while True:
 	if frame_index == len(animation_frames):
 		frame_index = 0
 		completed_plays += 1
+		if completed_plays == REPEAT_COUNT:
+			completed_plays = 0
