@@ -1,8 +1,10 @@
+from pathlib import Path
 from pico2d import *
 from typing import NamedTuple
 
 CANVAS_WIDTH = 960
 CANVAS_HEIGHT = 720
+SHEET_WIDTH = 1536
 SHEET_HEIGHT = 1024
 FRAME_DELAY = 0.08
 DISPLAY_HEIGHT = 520
@@ -123,34 +125,56 @@ def draw_frame(frame, frames):
 	update_canvas()
 
 
+def validate_animations():
+	for animation_number, frames in enumerate(ANIMATIONS, start=1):
+		if not frames:
+			raise ValueError(f'애니메이션 {animation_number}에 프레임이 없습니다.')
+		for frame_number, frame in enumerate(frames, start=1):
+			if (
+				frame.left < 0
+				or frame.top < 0
+				or frame.width <= 0
+				or frame.height <= 0
+				or frame.left + frame.width > SHEET_WIDTH
+				or frame.top + frame.height > SHEET_HEIGHT
+			):
+				raise ValueError(
+					f'애니메이션 {animation_number}의 {frame_number}번 프레임 '
+					'영역이 스프라이트 시트를 벗어납니다.'
+				)
+
+
+validate_animations()
 open_canvas(CANVAS_WIDTH, CANVAS_HEIGHT)
-sprite_sheet = load_image('animation_sprite_sheet.png')
+try:
+	sprite_sheet = load_image(str(Path(__file__).with_name('animation_sprite_sheet.png')))
 
-# The first frame is a measured (x, top, width, height) rectangle.
-animation_index = 0
-frame_index = 0
-completed_plays = 0
-running = True
+	animation_index = 0
+	frame_index = 0
+	completed_plays = 0
+	running = True
 
-while running:
-	for event in get_events():
-		if event.type == SDL_QUIT or (
-			event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE
-		):
-			running = False
+	while running:
+		for event in get_events():
+			if event.type == SDL_QUIT or (
+				event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE
+			):
+				running = False
+				break
+		if not running:
 			break
-	if not running:
-		break
 
-	animation_frames = ANIMATIONS[animation_index]
-	frame = animation_frames[frame_index]
-	draw_frame(frame, animation_frames)
-	delay(FRAME_DELAY)
-	frame_index += 1
-	if frame_index == len(animation_frames):
-		frame_index = 0
-		completed_plays += 1
-		if completed_plays == REPEAT_COUNT:
-			delay(PAUSE_SECONDS)
-			completed_plays = 0
-			animation_index = (animation_index + 1) % len(ANIMATIONS)
+		animation_frames = ANIMATIONS[animation_index]
+		frame = animation_frames[frame_index]
+		draw_frame(frame, animation_frames)
+		delay(FRAME_DELAY)
+		frame_index += 1
+		if frame_index == len(animation_frames):
+			frame_index = 0
+			completed_plays += 1
+			if completed_plays == REPEAT_COUNT:
+				delay(PAUSE_SECONDS)
+				completed_plays = 0
+				animation_index = (animation_index + 1) % len(ANIMATIONS)
+finally:
+	close_canvas()
