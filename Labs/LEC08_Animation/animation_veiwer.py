@@ -85,6 +85,15 @@ SIXTH_FRAMES = (
 	Frame(1232, 967, 82, 22),
 )
 
+ANIMATIONS = (
+	RUN_FRAMES,
+	SECOND_FRAMES,
+	THIRD_FRAMES,
+	FOURTH_FRAMES,
+	FIFTH_FRAMES,
+	SIXTH_FRAMES,
+)
+
 
 open_canvas(CANVAS_WIDTH, CANVAS_HEIGHT)
 sprite_sheet = load_image('animation_sprite_sheet.png')
