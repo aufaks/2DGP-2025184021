@@ -105,6 +105,22 @@ def display_size(frame, frames):
 	return max(1, int(frame.width * scale)), max(1, int(frame.height * scale))
 
 
+def draw_frame(frame, frames):
+	clear_canvas()
+	display_width, display_height = display_size(frame, frames)
+	sprite_sheet.clip_draw(
+		frame.left,
+		source_bottom(frame),
+		frame.width,
+		frame.height,
+		CANVAS_WIDTH // 2,
+		CANVAS_HEIGHT // 2,
+		display_width,
+		display_height,
+	)
+	update_canvas()
+
+
 open_canvas(CANVAS_WIDTH, CANVAS_HEIGHT)
 sprite_sheet = load_image('animation_sprite_sheet.png')
 
@@ -112,18 +128,5 @@ sprite_sheet = load_image('animation_sprite_sheet.png')
 frame = RUN_FRAMES[0]
 
 while True:
-	clear_canvas()
-	left, top, width, height = frame
-	display_width, display_height = display_size(frame, RUN_FRAMES)
-	sprite_sheet.clip_draw(
-		left,
-		source_bottom(frame),
-		width,
-		height,
-		CANVAS_WIDTH // 2,
-		CANVAS_HEIGHT // 2,
-		display_width,
-		display_height,
-	)
-	update_canvas()
+	draw_frame(frame, RUN_FRAMES)
 	delay(FRAME_DELAY)
