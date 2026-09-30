@@ -95,6 +95,10 @@ ANIMATIONS = (
 )
 
 
+def source_bottom(frame):
+	return SHEET_HEIGHT - frame.top - frame.height
+
+
 open_canvas(CANVAS_WIDTH, CANVAS_HEIGHT)
 sprite_sheet = load_image('animation_sprite_sheet.png')
 
@@ -107,7 +111,7 @@ while True:
 	scale = DISPLAY_HEIGHT / height
 	sprite_sheet.clip_draw(
 		left,
-		SHEET_HEIGHT - top - height,
+		source_bottom(frame),
 		width,
 		height,
 		CANVAS_WIDTH // 2,
