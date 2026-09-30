@@ -99,6 +99,12 @@ def source_bottom(frame):
 	return SHEET_HEIGHT - frame.top - frame.height
 
 
+def display_size(frame, frames):
+	animation_height = max(item.height for item in frames)
+	scale = DISPLAY_HEIGHT / animation_height
+	return max(1, int(frame.width * scale)), max(1, int(frame.height * scale))
+
+
 open_canvas(CANVAS_WIDTH, CANVAS_HEIGHT)
 sprite_sheet = load_image('animation_sprite_sheet.png')
 
@@ -108,7 +114,7 @@ frame = RUN_FRAMES[0]
 while True:
 	clear_canvas()
 	left, top, width, height = frame
-	scale = DISPLAY_HEIGHT / height
+	display_width, display_height = display_size(frame, RUN_FRAMES)
 	sprite_sheet.clip_draw(
 		left,
 		source_bottom(frame),
@@ -116,8 +122,8 @@ while True:
 		height,
 		CANVAS_WIDTH // 2,
 		CANVAS_HEIGHT // 2,
-		int(width * scale),
-		DISPLAY_HEIGHT,
+		display_width,
+		display_height,
 	)
 	update_canvas()
 	delay(FRAME_DELAY)
