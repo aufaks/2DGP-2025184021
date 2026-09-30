@@ -133,3 +133,4 @@ while True:
 	frame = animation_frames[frame_index]
 	draw_frame(frame, animation_frames)
 	delay(FRAME_DELAY)
+	frame_index = (frame_index + 1) % len(animation_frames)
