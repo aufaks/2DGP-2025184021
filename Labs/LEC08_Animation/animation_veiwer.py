@@ -143,3 +143,4 @@ while True:
 		if completed_plays == REPEAT_COUNT:
 			delay(PAUSE_SECONDS)
 			completed_plays = 0
+			animation_index = (animation_index + 1) % len(ANIMATIONS)
