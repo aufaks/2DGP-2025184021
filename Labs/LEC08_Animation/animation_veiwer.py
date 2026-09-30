@@ -1,4 +1,5 @@
 from pico2d import *
+from typing import NamedTuple
 
 CANVAS_WIDTH = 960
 CANVAS_HEIGHT = 720
@@ -6,11 +7,19 @@ SHEET_HEIGHT = 1024
 FRAME_DELAY = 0.08
 DISPLAY_HEIGHT = 520
 
+
+class Frame(NamedTuple):
+	left: int
+	top: int
+	width: int
+	height: int
+
+
 open_canvas(CANVAS_WIDTH, CANVAS_HEIGHT)
 sprite_sheet = load_image('animation_sprite_sheet.png')
 
 # The first frame is a measured (x, top, width, height) rectangle.
-frame = (73, 50, 70, 119)
+frame = Frame(73, 50, 70, 119)
 
 while True:
 	clear_canvas()
