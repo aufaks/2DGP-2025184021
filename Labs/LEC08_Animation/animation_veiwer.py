@@ -130,8 +130,18 @@ sprite_sheet = load_image('animation_sprite_sheet.png')
 animation_index = 0
 frame_index = 0
 completed_plays = 0
+running = True
 
-while True:
+while running:
+	for event in get_events():
+		if event.type == SDL_QUIT or (
+			event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE
+		):
+			running = False
+			break
+	if not running:
+		break
+
 	animation_frames = ANIMATIONS[animation_index]
 	frame = animation_frames[frame_index]
 	draw_frame(frame, animation_frames)
