@@ -2,6 +2,7 @@ import pico2d
 
 WINDOW_WIDTH = 800
 WINDOW_HEIGHT = 600
+FRAME_DELAY = 1 / 60
 
 
 def handle_events():
@@ -17,6 +18,9 @@ def main():
         running = True
         while running:
             running = handle_events()
+            pico2d.clear_canvas()
+            pico2d.update_canvas()
+            pico2d.delay(FRAME_DELAY)
     finally:
         pico2d.close_canvas()
 
