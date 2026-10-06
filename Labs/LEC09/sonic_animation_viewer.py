@@ -1,8 +1,11 @@
+from pathlib import Path
+
 import pico2d
 
 WINDOW_WIDTH = 800
 WINDOW_HEIGHT = 600
 FRAME_DELAY = 1 / 60
+SPRITE_PATH = Path(__file__).with_name("sonic-sprite.png")
 
 
 def handle_events():
@@ -15,6 +18,7 @@ def handle_events():
 def main():
     pico2d.open_canvas(WINDOW_WIDTH, WINDOW_HEIGHT)
     try:
+        sprite_sheet = pico2d.load_image(str(SPRITE_PATH))
         running = True
         while running:
             running = handle_events()
