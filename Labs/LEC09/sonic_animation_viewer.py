@@ -5,6 +5,8 @@ import pico2d
 WINDOW_WIDTH = 800
 WINDOW_HEIGHT = 600
 FRAME_DELAY = 1 / 60
+DISPLAY_SCALE = 5
+SCREEN_MARGIN = 24
 SPRITE_PATH = Path(__file__).with_name("sonic-sprite.png")
 
 FRAME_ROWS = [
@@ -37,6 +39,13 @@ ANIMATIONS = [
 def draw_frame(sprite_sheet, frame):
     left, top, width, height = frame
     bottom = sprite_sheet.h - top - height
+    scale = min(
+        DISPLAY_SCALE,
+        (WINDOW_WIDTH - SCREEN_MARGIN * 2) / width,
+        (WINDOW_HEIGHT - SCREEN_MARGIN * 2) / height,
+    )
+    display_width = round(width * scale)
+    display_height = round(height * scale)
     sprite_sheet.clip_draw(
         left,
         bottom,
@@ -44,8 +53,8 @@ def draw_frame(sprite_sheet, frame):
         height,
         WINDOW_WIDTH // 2,
         WINDOW_HEIGHT // 2,
-        width,
-        height,
+        display_width,
+        display_height,
     )
 
 
