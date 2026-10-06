@@ -6,6 +6,7 @@ WINDOW_WIDTH = 800
 WINDOW_HEIGHT = 600
 FRAME_DELAY = 1 / 60
 FRAME_DURATION = 0.1
+REST_DURATION = 1.0
 DISPLAY_SCALE = 5
 SCREEN_MARGIN = 24
 REPETITIONS_PER_ANIMATION = 5
@@ -67,17 +68,27 @@ class AnimationPlayer:
         self.frame_index = 0
         self.completed_repetitions = 0
         self.frame_elapsed = 0
-        self.is_complete = False
+        self.is_resting = False
+        self.rest_elapsed = 0
 
     @property
     def current_frame(self):
         return self.animations[self.animation_index][1][self.frame_index]
 
     def update(self, delta_time):
-        if self.is_complete:
+        delta_time = max(0, delta_time)
+        if self.is_resting:
+            self.rest_elapsed += delta_time
+            if self.rest_elapsed + 1e-9 >= REST_DURATION:
+                self.animation_index = 0
+                self.frame_index = 0
+                self.completed_repetitions = 0
+                self.frame_elapsed = 0
+                self.rest_elapsed = 0
+                self.is_resting = False
             return
 
-        self.frame_elapsed += max(0, delta_time)
+        self.frame_elapsed += delta_time
         frames = self.animations[self.animation_index][1]
         while self.frame_elapsed + 1e-9 >= FRAME_DURATION:
             self.frame_elapsed = max(0, self.frame_elapsed - FRAME_DURATION)
@@ -86,7 +97,8 @@ class AnimationPlayer:
                 self.completed_repetitions += 1
                 if self.completed_repetitions >= REPETITIONS_PER_ANIMATION:
                     self.frame_index = len(frames) - 1
-                    self.is_complete = True
+                    self.is_resting = True
+                    self.rest_elapsed = 0
                     break
                 self.frame_index = 0
 
