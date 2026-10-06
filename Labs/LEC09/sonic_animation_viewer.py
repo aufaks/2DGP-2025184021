@@ -9,6 +9,7 @@ FRAME_DURATION = 0.1
 REST_DURATION = 1.0
 DISPLAY_SCALE = 5
 SCREEN_MARGIN = 24
+MOVEMENT_WRAP_MARGIN = 120
 REPETITIONS_PER_ANIMATION = 5
 SPRITE_PATH = Path(__file__).with_name("sonic-sprite.png")
 
@@ -34,12 +35,26 @@ def build_frame_row(top, height, horizontal_bounds):
 
 
 ANIMATIONS = [
-    (f"동작 {index:02d}", build_frame_row(top, height, bounds))
-    for index, (top, height, bounds) in enumerate(FRAME_ROWS, start=1)
+    (name, build_frame_row(top, height, bounds), movement_speed)
+    for (top, height, bounds), (name, movement_speed) in zip(
+        FRAME_ROWS,
+        [
+            ("걷기", 70),
+            ("달리기", 150),
+            ("대시", 180),
+            ("구르기", 120),
+            ("구르기", 120),
+            ("달리기", 150),
+            ("달리기", 150),
+            ("제자리 동작", 0),
+            ("표정", 0),
+            ("표정", 0),
+        ],
+    )
 ]
 
 
-def draw_frame(sprite_sheet, frame):
+def draw_frame(sprite_sheet, frame, center_x=WINDOW_WIDTH // 2):
     left, top, width, height = frame
     bottom = sprite_sheet.h - top - height
     scale = min(
@@ -54,7 +69,7 @@ def draw_frame(sprite_sheet, frame):
         bottom,
         width,
         height,
-        WINDOW_WIDTH // 2,
+        round(center_x),
         WINDOW_HEIGHT // 2,
         display_width,
         display_height,
@@ -70,10 +85,15 @@ class AnimationPlayer:
         self.frame_elapsed = 0
         self.is_resting = False
         self.rest_elapsed = 0
+        self.position_x = WINDOW_WIDTH / 2
 
     @property
     def current_frame(self):
         return self.animations[self.animation_index][1][self.frame_index]
+
+    @property
+    def current_speed(self):
+        return self.animations[self.animation_index][2]
 
     def update(self, delta_time):
         delta_time = max(0, delta_time)
@@ -88,6 +108,11 @@ class AnimationPlayer:
                 self.frame_elapsed = 0
             return
 
+        self.position_x = (
+            self.position_x
+            + self.current_speed * delta_time
+            + MOVEMENT_WRAP_MARGIN
+        ) % (WINDOW_WIDTH + MOVEMENT_WRAP_MARGIN * 2) - MOVEMENT_WRAP_MARGIN
         self.frame_elapsed += delta_time
         frames = self.animations[self.animation_index][1]
         while self.frame_elapsed + 1e-9 >= FRAME_DURATION:
@@ -123,7 +148,7 @@ def main():
             player.update(current_time - previous_time)
             previous_time = current_time
             pico2d.clear_canvas()
-            draw_frame(sprite_sheet, player.current_frame)
+            draw_frame(sprite_sheet, player.current_frame, player.position_x)
             pico2d.update_canvas()
             pico2d.delay(FRAME_DELAY)
     finally:
