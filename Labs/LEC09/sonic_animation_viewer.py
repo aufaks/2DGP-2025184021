@@ -8,6 +8,7 @@ FRAME_DELAY = 1 / 60
 FRAME_DURATION = 0.1
 DISPLAY_SCALE = 5
 SCREEN_MARGIN = 24
+REPETITIONS_PER_ANIMATION = 5
 SPRITE_PATH = Path(__file__).with_name("sonic-sprite.png")
 
 FRAME_ROWS = [
@@ -59,6 +60,37 @@ def draw_frame(sprite_sheet, frame):
     )
 
 
+class AnimationPlayer:
+    def __init__(self, animations):
+        self.animations = animations
+        self.animation_index = 0
+        self.frame_index = 0
+        self.completed_repetitions = 0
+        self.frame_elapsed = 0
+        self.is_complete = False
+
+    @property
+    def current_frame(self):
+        return self.animations[self.animation_index][1][self.frame_index]
+
+    def update(self, delta_time):
+        if self.is_complete:
+            return
+
+        self.frame_elapsed += max(0, delta_time)
+        frames = self.animations[self.animation_index][1]
+        while self.frame_elapsed + 1e-9 >= FRAME_DURATION:
+            self.frame_elapsed = max(0, self.frame_elapsed - FRAME_DURATION)
+            self.frame_index += 1
+            if self.frame_index == len(frames):
+                self.completed_repetitions += 1
+                if self.completed_repetitions >= REPETITIONS_PER_ANIMATION:
+                    self.frame_index = len(frames) - 1
+                    self.is_complete = True
+                    break
+                self.frame_index = 0
+
+
 def handle_events():
     for event in pico2d.get_events():
         if event.type == pico2d.SDL_QUIT:
@@ -70,15 +102,16 @@ def main():
     pico2d.open_canvas(WINDOW_WIDTH, WINDOW_HEIGHT)
     try:
         sprite_sheet = pico2d.load_image(str(SPRITE_PATH))
-        animation_frames = ANIMATIONS[0][1]
-        animation_start_time = pico2d.get_time()
+        player = AnimationPlayer(ANIMATIONS)
+        previous_time = pico2d.get_time()
         running = True
         while running:
             running = handle_events()
-            elapsed_time = pico2d.get_time() - animation_start_time
-            frame_index = int((elapsed_time + 1e-9) / FRAME_DURATION) % len(animation_frames)
+            current_time = pico2d.get_time()
+            player.update(current_time - previous_time)
+            previous_time = current_time
             pico2d.clear_canvas()
-            draw_frame(sprite_sheet, animation_frames[frame_index])
+            draw_frame(sprite_sheet, player.current_frame)
             pico2d.update_canvas()
             pico2d.delay(FRAME_DELAY)
     finally:
