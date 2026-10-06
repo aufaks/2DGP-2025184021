@@ -5,6 +5,7 @@ import pico2d
 WINDOW_WIDTH = 800
 WINDOW_HEIGHT = 600
 FRAME_DELAY = 1 / 60
+FRAME_DURATION = 0.1
 DISPLAY_SCALE = 5
 SCREEN_MARGIN = 24
 SPRITE_PATH = Path(__file__).with_name("sonic-sprite.png")
@@ -69,11 +70,15 @@ def main():
     pico2d.open_canvas(WINDOW_WIDTH, WINDOW_HEIGHT)
     try:
         sprite_sheet = pico2d.load_image(str(SPRITE_PATH))
+        animation_frames = ANIMATIONS[0][1]
+        animation_start_time = pico2d.get_time()
         running = True
         while running:
             running = handle_events()
+            elapsed_time = pico2d.get_time() - animation_start_time
+            frame_index = int((elapsed_time + 1e-9) / FRAME_DURATION) % len(animation_frames)
             pico2d.clear_canvas()
-            draw_frame(sprite_sheet, ANIMATIONS[0][1][0])
+            draw_frame(sprite_sheet, animation_frames[frame_index])
             pico2d.update_canvas()
             pico2d.delay(FRAME_DELAY)
     finally:
