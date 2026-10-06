@@ -38,13 +38,13 @@ ANIMATIONS = [
     for (top, height, bounds), (name, movement_speed) in zip(
         FRAME_ROWS,
         [
-            ("걷기", 70),
+            ("걷기", 120),
             ("달리기", 150),
-            ("대시", 180),
-            ("구르기", 120),
-            ("구르기", 120),
-            ("달리기", 150),
-            ("달리기", 150),
+            ("대시", 220),
+            ("구르기", 150),
+            ("구르기", 220),
+            ("달리기", 220),
+            ("달리기", 220),
             ("제자리 동작", 0),
             ("표정", 0),
             ("표정", 0),
@@ -96,6 +96,7 @@ class AnimationPlayer:
         self.is_resting = False
         self.rest_elapsed = 0
         self.position_x = WINDOW_WIDTH / 2
+        self._set_animation_start_position()
 
     @property
     def current_frame(self):
@@ -104,6 +105,15 @@ class AnimationPlayer:
     @property
     def current_speed(self):
         return self.animations[self.animation_index][2]
+
+    def _set_animation_start_position(self):
+        if self.current_speed == 0:
+            self.position_x = WINDOW_WIDTH / 2
+            return
+
+        frames = self.animations[self.animation_index][1]
+        widest_frame = max(get_display_size(frame)[0] for frame in frames)
+        self.position_x = (widest_frame + 1) // 2
 
     def update(self, delta_time):
         delta_time = max(0, delta_time)
@@ -116,7 +126,7 @@ class AnimationPlayer:
                 self.frame_index = 0
                 self.completed_repetitions = 0
                 self.frame_elapsed = 0
-            self.position_x = clamp_center_x(self.current_frame, self.position_x)
+                self._set_animation_start_position()
             return
 
         self.position_x += self.current_speed * delta_time
