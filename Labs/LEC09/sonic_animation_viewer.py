@@ -70,22 +70,29 @@ class AnimationPlayer:
         self.frame_elapsed = 0
         self.is_resting = False
         self.rest_elapsed = 0
+        self.is_finished = False
 
     @property
     def current_frame(self):
         return self.animations[self.animation_index][1][self.frame_index]
 
     def update(self, delta_time):
+        if self.is_finished:
+            return
+
         delta_time = max(0, delta_time)
         if self.is_resting:
             self.rest_elapsed += delta_time
             if self.rest_elapsed + 1e-9 >= REST_DURATION:
-                self.animation_index = 0
-                self.frame_index = 0
-                self.completed_repetitions = 0
-                self.frame_elapsed = 0
                 self.rest_elapsed = 0
                 self.is_resting = False
+                if self.animation_index + 1 < len(self.animations):
+                    self.animation_index += 1
+                    self.frame_index = 0
+                    self.completed_repetitions = 0
+                    self.frame_elapsed = 0
+                else:
+                    self.is_finished = True
             return
 
         self.frame_elapsed += delta_time
