@@ -9,7 +9,6 @@ FRAME_DURATION = 0.1
 REST_DURATION = 1.0
 DISPLAY_SCALE = 5
 SCREEN_MARGIN = 24
-MOVEMENT_WRAP_MARGIN = 120
 REPETITIONS_PER_ANIMATION = 5
 SPRITE_PATH = Path(__file__).with_name("sonic-sprite.png")
 
@@ -54,22 +53,33 @@ ANIMATIONS = [
 ]
 
 
-def draw_frame(sprite_sheet, frame, center_x=WINDOW_WIDTH // 2):
-    left, top, width, height = frame
-    bottom = sprite_sheet.h - top - height
+def get_display_size(frame):
+    _, _, width, height = frame
     scale = min(
         DISPLAY_SCALE,
         (WINDOW_WIDTH - SCREEN_MARGIN * 2) / width,
         (WINDOW_HEIGHT - SCREEN_MARGIN * 2) / height,
     )
-    display_width = round(width * scale)
-    display_height = round(height * scale)
+    return round(width * scale), round(height * scale)
+
+
+def clamp_center_x(frame, center_x):
+    display_width, _ = get_display_size(frame)
+    minimum_center = (display_width + 1) // 2
+    maximum_center = WINDOW_WIDTH - minimum_center
+    return min(max(round(center_x), minimum_center), maximum_center)
+
+
+def draw_frame(sprite_sheet, frame, center_x=WINDOW_WIDTH // 2):
+    left, top, width, height = frame
+    bottom = sprite_sheet.h - top - height
+    display_width, display_height = get_display_size(frame)
     sprite_sheet.clip_draw(
         left,
         bottom,
         width,
         height,
-        round(center_x),
+        clamp_center_x(frame, center_x),
         WINDOW_HEIGHT // 2,
         display_width,
         display_height,
@@ -106,13 +116,10 @@ class AnimationPlayer:
                 self.frame_index = 0
                 self.completed_repetitions = 0
                 self.frame_elapsed = 0
+            self.position_x = clamp_center_x(self.current_frame, self.position_x)
             return
 
-        self.position_x = (
-            self.position_x
-            + self.current_speed * delta_time
-            + MOVEMENT_WRAP_MARGIN
-        ) % (WINDOW_WIDTH + MOVEMENT_WRAP_MARGIN * 2) - MOVEMENT_WRAP_MARGIN
+        self.position_x += self.current_speed * delta_time
         self.frame_elapsed += delta_time
         frames = self.animations[self.animation_index][1]
         while self.frame_elapsed + 1e-9 >= FRAME_DURATION:
@@ -126,6 +133,7 @@ class AnimationPlayer:
                     self.rest_elapsed = 0
                     break
                 self.frame_index = 0
+        self.position_x = clamp_center_x(self.current_frame, self.position_x)
 
 
 def handle_events():
