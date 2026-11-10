@@ -5,16 +5,20 @@ from sdl2 import (SDL_KEYDOWN, SDL_KEYUP, SDLK_LEFT, SDLK_RIGHT,
                   SDLK_SPACE)
 from transitions import Machine
 
+import game_world
+from ball import Ball
+
 
 class Boy:
     def __init__(self):
-        self.x, self.y = 400, 90
+        self.x, self.y = 400, 30
         self.frame = 0
         self.image = load_image('animation_sheet.png')
         self.idle_started_at = get_time()
         self.dir = 0
         self.face_dir = 1
         self.pressed_keys = set()
+        self.space_pressed = False
 
         self.machine = Machine(
             model=self,
@@ -44,10 +48,20 @@ class Boy:
         self.frame = 0
 
     def handle_event(self, event):
-        if (event.type == SDL_KEYDOWN and
-                event.key == SDLK_SPACE and
-                self.state == 'SLEEP'):
-            self.wake_up()
+        if event.key == SDLK_SPACE:
+            if event.type == SDL_KEYUP:
+                self.space_pressed = False
+                return
+            if event.type != SDL_KEYDOWN or self.space_pressed:
+                return
+
+            self.space_pressed = True
+            if self.state in ('IDLE', 'RUN'):
+                ball = Ball(self.x + self.face_dir * 30, self.y + 10,
+                            self.face_dir)
+                game_world.add_object(ball, 1)
+            elif self.state == 'SLEEP':
+                self.wake_up()
             return
 
         if (event.type not in (SDL_KEYDOWN, SDL_KEYUP) or
