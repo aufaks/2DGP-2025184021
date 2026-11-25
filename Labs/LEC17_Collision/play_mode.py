@@ -39,6 +39,9 @@ def init():
     game_world.add_oject(grass, 0)
     game_world.add_objects(balls, 1)
 
+    zombies = [Zombie() for _ in range(4)]
+    game_world.add_objects(zombies, 1)
+
     # 소년과 공 사이의 충돌 페어를 등록
     game_world.add_collision_pair("boy:ball", boy, None)
     for ball in balls:
